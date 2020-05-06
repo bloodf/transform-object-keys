@@ -1,50 +1,56 @@
-# camel-object
-
-> Based on [camelcase-keys](https://github.com/sindresorhus/camelcase)
+# transform-object-keys
 
 ## Install
 
 ```
-$ npm install camelcase-keys
+$ npm install transform-object-keys
 ```
 
 ## Usage
 
 ```js
-const camelcaseKeys = require('camelcase-keys');
+const transformObjectKeys = require('transform-object-keys');
 
 // Convert an object
-camelcaseKeys({'foo-bar': true});
+transformObjectKeys({'foo-bar': true});
 //=> {fooBar: true}
 
 // Convert an array of objects
-camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
+transformObjectKeys([{'foo-bar': true}, {'bar-foo': false}]);
 //=> [{fooBar: true}, {barFoo: false}]
 
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
+transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
 //=> {fooBar: true, nested: {unicornRainbow: true}}
 
-camelcaseKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
+transformObjectKeys({a_b: 1, a_c: {c_d: 1, c_e: {e_f: 1}}}, {deep: true, stopPaths: ['a_c.c_e']}),
 //=> {aB: 1, aC: {cD: 1, cE: {e_f: 1}}}
 
 // Convert object keys to pascal case
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
+transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
+//=> {FooBar: true, Nested: {UnicornRainbow: true}}
+
+// Convert object keys to snake case
+transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, snakeCase: true});
+//=> {FooBar: true, Nested: {UnicornRainbow: true}}
+
+// Convert object keys using custom function
+transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, transform: key => key.toUppercase()});
 //=> {FooBar: true, Nested: {UnicornRainbow: true}}
 ```
 
 ```js
-const camelcaseKeys = require('camelcase-keys');
+const transformObjectKeys = require('transform-object-keys');
 
 const argv = require('minimist')(process.argv.slice(2));
 //=> {_: [], 'foo-bar': true}
 
-camelcaseKeys(argv);
+transformObjectKeys(argv);
 //=> {_: [], fooBar: true}
 ```
 
 ## API
 
-### camelcaseKeys(input, options?)
+### transformObjectKeys(input, options?)
 
 #### input
 
@@ -71,7 +77,7 @@ Default: `[]`
 Exclude children at the given object paths in dot-notation from being camel-cased. For example, with an object like `{a: {b: '🦄'}}`, the object path to reach the unicorn is `'a.b'`.
 
 ```js
-camelcaseKeys({
+transformObjectKeys({
 	a_b: 1,
 	a_c: {
 		c_d: 1,
@@ -112,11 +118,19 @@ Default: `false`
 
 Uppercase the first character as in `bye-bye` → `ByeBye`.
 
-## camelcase-keys for enterprise
+##### snakeCase
 
-Available as part of the Tidelift Subscription.
+Type: `boolean`\
+Default: `false`
 
-The maintainers of camelcase-keys and thousands of other packages are working with Tidelift to deliver commercial support and maintenance for the open source dependencies you use to build your applications. Save time, reduce risk, and improve code health, while paying the maintainers of the exact dependencies you use. [Learn more.](https://tidelift.com/subscription/pkg/npm-camelcase-keys?utm_source=npm-camelcase-keys&utm_medium=referral&utm_campaign=enterprise&utm_term=repo)
+Uppercase the first character as in `bye-bye` → `bye_bye`.
+
+##### transform
+
+Type: `(key: string) => string`\
+Default: `null`
+
+Transformation function to be used instead of default presets
 
 ## Related
 

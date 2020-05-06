@@ -1,4 +1,4 @@
-declare namespace camelcaseKeys {
+declare namespace transformObjectKeys {
 	interface Options {
 		/**
 		Recurse nested objects and objects in arrays.
@@ -33,7 +33,7 @@ declare namespace camelcaseKeys {
 
 		@example
 		```
-		camelcaseKeys({
+		transformObjectKeys({
 			a_b: 1,
 			a_c: {
 				c_d: 1,
@@ -70,46 +70,55 @@ declare namespace camelcaseKeys {
 }
 
 /**
-Convert object keys to camel case using [`camelcase`](https://github.com/bloodf/camel-object).
+ Convert object keys to camel case
 
-@param input - Object or array of objects to camel-case.
+ @param input - Object or array of objects to camel-case.
 
-@example
-```
-import camelcaseKeys = require('camelcase-keys');
+ @param options
+ @example
+ ```
+ import transformObjectKeys = require('transform-object-keys');
 
-// Convert an object
-camelcaseKeys({'foo-bar': true});
-//=> {fooBar: true}
+ // Convert an object
+ transformObjectKeys({'foo-bar': true});
+ //=> {fooBar: true}
 
-// Convert an array of objects
-camelcaseKeys([{'foo-bar': true}, {'bar-foo': false}]);
-//=> [{fooBar: true}, {barFoo: false}]
+ // Convert an array of objects
+ transformObjectKeys([{'foo-bar': true}, {'bar-foo': false}]);
+ //=> [{fooBar: true}, {barFoo: false}]
 
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
-//=> {fooBar: true, nested: {unicornRainbow: true}}
+ transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true});
+ //=> {fooBar: true, nested: {unicornRainbow: true}}
 
-// Convert object keys to pascal case
-camelcaseKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
-//=> {FooBar: true, Nested: {UnicornRainbow: true}}
+ // Convert object keys to pascal case
+ transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, pascalCase: true});
+ //=> {FooBar: true, Nested: {UnicornRainbow: true}}
 
-import minimist = require('minimist');
+ // Convert object keys to snake case
+ transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, snakeCase: true});
+ //=> {FooBar: true, Nested: {UnicornRainbow: true}}
 
-const argv = minimist(process.argv.slice(2));
-//=> {_: [], 'foo-bar': true}
+ // Convert object keys using custom function
+ transformObjectKeys({'foo-bar': true, nested: {unicorn_rainbow: true}}, {deep: true, transform: key => key.toUppercase()});
+ //=> {FooBar: true, Nested: {UnicornRainbow: true}}
 
-camelcaseKeys(argv);
-//=> {_: [], fooBar: true}
-```
-*/
-declare function camelcaseKeys<T extends ReadonlyArray<{ [key: string]: any }>>(
+ import minimist = require('minimist');
+
+ const argv = minimist(process.argv.slice(2));
+ //=> {_: [], 'foo-bar': true}
+
+ transformObjectKeys(argv);
+ //=> {_: [], fooBar: true}
+ ```
+ */
+declare function transformObjectKeys<T extends ReadonlyArray<{ [key: string]: any }>>(
 	input: T,
-	options?: camelcaseKeys.Options,
+	options?: transformObjectKeys.Options,
 ): T;
 
-declare function camelcaseKeys<T extends { [key: string]: any }>(
+declare function transformObjectKeys<T extends { [key: string]: any }>(
 	input: T,
-	options?: camelcaseKeys.Options,
+	options?: transformObjectKeys.Options,
 ): T;
 
-export = camelcaseKeys;
+export = transformObjectKeys;

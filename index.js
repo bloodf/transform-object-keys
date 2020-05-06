@@ -27,6 +27,7 @@ const camelCaseConvert = (input, options) => {
 		deep: false,
 		pascalCase: false,
 		snakeCase: false,
+		kebabCase: false,
 		transform: null,
 		...options
 	};
@@ -34,6 +35,18 @@ const camelCaseConvert = (input, options) => {
 	const {exclude, pascalCase, snakeCase, stopPaths, deep, transform} = options;
 
 	const stopPathsSet = new Set(stopPaths);
+
+	const getKeyCase = key => {
+		if (typeof transform === 'function') {
+			return transform(key);
+		}
+
+		if (snakeCase) {
+			return transformSnake(key);
+		}
+
+		return camelCase(key, {pascalCase});
+	};
 
 	const makeMapper = parentPath => (key, value) => {
 		if (deep && isObject(value)) {
@@ -45,11 +58,7 @@ const camelCaseConvert = (input, options) => {
 		}
 
 		if (!(exclude && has(exclude, key))) {
-			const cacheKey = typeof transform === 'function' ?
-				transform(key) :
-				(snakeCase ?
-					transformSnake(key) :
-					camelCase(key, {pascalCase}));
+			const cacheKey = getKeyCase(key);
 
 			if (cache.has(cacheKey)) {
 				key = cache.get(cacheKey);
