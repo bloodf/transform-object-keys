@@ -1,7 +1,6 @@
 'use strict';
 const mapObj = require('map-obj');
 const camelCase = require('camelcase');
-const {snakeCase: transformSnake} = require('snake-case');
 const QuickLru = require('quick-lru');
 
 const has = (array, key) => array.some(x => {
@@ -42,7 +41,12 @@ const camelCaseConvert = (input, options) => {
 		}
 
 		if (snakeCase) {
-			return transformSnake(key);
+			const sk = string => string &&
+				string.match(/[A-Z]{2,}(?=[A-Z][a-z]+\d*|\b)|[A-Z]?[a-z]+\d*|[A-Z]|\d+/g)
+					.map(s => s.toLowerCase())
+					.join('_');
+
+			return sk(key);
 		}
 
 		return camelCase(key, {pascalCase});
