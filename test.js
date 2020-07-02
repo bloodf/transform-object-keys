@@ -53,9 +53,9 @@ test('snakeCase option only', t => {
 
 test('snakeCase and deep options', t => {
 	t.deepEqual(
-		transformKeys({PFooBar: true, P1FooBar: true, PObj: {PTwo: false, P2Two3Porra: false, PArr: [{PThreeFour: true}]}}, {deep: true, snakeCase: true}),
+		transformKeys({PFooBar: true, P1FooBar: true, PObj: {PTwo: false, P2Two3Porra: false, emergency1PhoneNumber: false, PArr: [{PThreeFour: true}]}}, {deep: true, snakeCase: true}),
 		// eslint-disable-next-line camelcase
-		{p_foo_bar: true, p_1_foo_bar: true, p_obj: {p_two: false, p_2_two_3_porra: false, p_arr: [{p_three_four: true}]}}
+		{p_foo_bar: true, p_1_foo_bar: true, p_obj: {p_two: false, p_2_two_3_porra: false, emergency_1_phone_number: false, p_arr: [{p_three_four: true}]}}
 	);
 });
 

@@ -42,7 +42,7 @@ const camelCaseConvert = (input, options) => {
 
 		if (snakeCase) {
 			const sk = string => string &&
-				string.match(/[A-Z]{2,}(?=[A-Z][a-z]+\d*|\b)|[A-Z]?[a-z]+\d*|[A-Z]|\d+/g)
+				string.match(/[A-Z]{2,}(?=[A-Z][a-z]+\d*|\b)|[A-Z]?[a-z]+|[A-Z]|\d+/g)
 					.map(s => s.toLowerCase())
 					.join('_');
 

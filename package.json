@@ -1,6 +1,6 @@
 {
   "name": "transform-object-keys",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Transform object keys into a new one using preset or custom rules",
   "license": "MIT",
   "repository": "bloodf/transform-object-keys",
@@ -21,7 +21,7 @@
     "index.d.ts"
   ],
 	"main": "index.js",
-	"typings": "index.d.ts",
+	"types": "index.d.ts",
 	"keywords": [
     "map",
     "obj",
