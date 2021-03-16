@@ -128,7 +128,7 @@ type SnakelizeShallow<T> = { [K in keyof T as CamelToSnakeTransformer<Extract<K,
 
 type SnakelizeDeep<T> = T extends readonly any[] ? { [K in keyof T]: SnakelizeDeep<T[K]> } : T extends object ? { [K in keyof T as CamelToSnakeTransformer<Extract<K, string>>]: SnakelizeDeep<T[K]> } : T;
 
-export type Snakelize<T, Deep = undefined> = Deep extends boolean ? SnakelizeDeep<T> : SnakelizeShallow<T>;
+export type Snakelize<T, Deep = ''> = Deep extends boolean ? SnakelizeDeep<T> : SnakelizeShallow<T>;
 
 type SnakeToCamelTransformer<T extends PropertyKey> = T extends string ? string extends T ? string : T extends `${infer F}_${infer R}` ? `${F}${Capitalize<SnakeToCamelTransformer<R>>}` : T : T;
 
@@ -136,7 +136,7 @@ type CamelizeShallow<T> = { [K in keyof T as SnakeToCamelTransformer<K>]: T[K] }
 
 type CamelizeDeep<T> = T extends readonly any[] ? { [K in keyof T]: CamelizeDeep<T[K]> } : T extends object ? { [K in keyof T as SnakeToCamelTransformer<Extract<K, string>>]: CamelizeDeep<T[K]> } : T;
 
-export type Camelize<T, Deep = undefined> = Deep extends boolean ? CamelizeDeep<T> : CamelizeShallow<T>;
+export type Camelize<T, Deep = ''> = Deep extends boolean ? CamelizeDeep<T> : CamelizeShallow<T>;
 
 export default transformObjectKeys;
 
