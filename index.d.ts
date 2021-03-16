@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-types */
 declare namespace transformObjectKeys {
 	interface Options {
 		/**
 		Recurse nested objects and objects in arrays.
 
 		@default false
-		*/
+		 */
 		readonly deep?: boolean;
 		/**
 		 Underscore between each word `bye-bye` → `bye_bye`.
@@ -23,7 +24,7 @@ declare namespace transformObjectKeys {
 		Exclude keys from being camel-cased.
 
 		@default []
-		*/
+		 */
 		readonly exclude?: ReadonlyArray<string | RegExp>;
 
 		/**
@@ -57,14 +58,14 @@ declare namespace transformObjectKeys {
 		// 	}
 		// }
 		```
-		*/
+		 */
 		readonly stopPaths?: string[];
 
 		/**
 		Uppercase the first character as in `bye-bye` → `ByeBye`.
 
 		@default false
-		*/
+		 */
 		readonly pascalCase?: boolean;
 	}
 }
@@ -111,14 +112,31 @@ declare namespace transformObjectKeys {
  //=> {_: [], fooBar: true}
  ```
  */
-declare function transformObjectKeys<T extends ReadonlyArray<{ [key: string]: any }>>(
+declare function transformObjectKeys<T extends ReadonlyArray<Record<string, any>>>(
 	input: T,
 	options?: transformObjectKeys.Options,
 ): T;
 
-declare function transformObjectKeys<T extends { [key: string]: any }>(
+declare function transformObjectKeys<T extends Record<string, any>>(
 	input: T,
 	options?: transformObjectKeys.Options,
 ): T;
 
-export = transformObjectKeys;
+type CamelToSnakeTransformer<T extends string> = string extends T ? string : T extends `${infer C0}${infer R}` ? `${C0 extends Uppercase<C0> ? '_' : ''}${Lowercase<C0>}${CamelToSnakeTransformer<R>}` : '';
+
+type SnakelizeShallow<T> = { [K in keyof T as CamelToSnakeTransformer<Extract<K, string>>]: T[K] };
+
+type SnakelizeDeep<T> = T extends readonly any[] ? { [K in keyof T]: SnakelizeDeep<T[K]> } : T extends object ? { [K in keyof T as CamelToSnakeTransformer<Extract<K, string>>]: SnakelizeDeep<T[K]> } : T;
+
+export type Snakelize<T, Deep = undefined> = Deep extends boolean ? SnakelizeDeep<T> : SnakelizeShallow<T>;
+
+type SnakeToCamelTransformer<T extends PropertyKey> = T extends string ? string extends T ? string : T extends `${infer F}_${infer R}` ? `${F}${Capitalize<SnakeToCamelTransformer<R>>}` : T : T;
+
+type CamelizeShallow<T> = { [K in keyof T as SnakeToCamelTransformer<K>]: T[K] };
+
+type CamelizeDeep<T> = T extends readonly any[] ? { [K in keyof T]: CamelizeDeep<T[K]> } : T extends object ? { [K in keyof T as SnakeToCamelTransformer<Extract<K, string>>]: CamelizeDeep<T[K]> } : T;
+
+export type Camelize<T, Deep = undefined> = Deep extends boolean ? CamelizeDeep<T> : CamelizeShallow<T>;
+
+export default transformObjectKeys;
+
