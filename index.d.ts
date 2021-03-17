@@ -124,19 +124,19 @@ declare function transformObjectKeys<T extends Record<string, any>>(
 
 type CamelToSnakeTransformer<T extends string> = string extends T ? string : T extends `${infer C0}${infer R}` ? `${C0 extends Uppercase<C0> ? '_' : ''}${Lowercase<C0>}${CamelToSnakeTransformer<R>}` : '';
 
-type SnakelizeShallow<T> = { [K in keyof T as CamelToSnakeTransformer<Extract<K, string>>]: T[K] };
+type SnakeCaseShallow<T> = { [K in keyof T as CamelToSnakeTransformer<Extract<K, string>>]: T[K] };
 
-type SnakelizeDeep<T> = T extends readonly any[] ? { [K in keyof T]: SnakelizeDeep<T[K]> } : T extends object ? { [K in keyof T as CamelToSnakeTransformer<Extract<K, string>>]: SnakelizeDeep<T[K]> } : T;
+type SnakeCaseDeep<T> = T extends readonly any[] ? { [K in keyof T]: SnakeCaseDeep<T[K]> } : T extends object ? { [K in keyof T as CamelToSnakeTransformer<Extract<K, string>>]: SnakeCaseDeep<T[K]> } : T;
 
-export type Snakelize<T, Deep = ''> = Deep extends boolean ? SnakelizeDeep<T> : SnakelizeShallow<T>;
+export type SnakeCase<T, Deep = ''> = Deep extends boolean ? SnakeCaseDeep<T> : SnakeCaseShallow<T>;
 
 type SnakeToCamelTransformer<T extends PropertyKey> = T extends string ? string extends T ? string : T extends `${infer F}_${infer R}` ? `${F}${Capitalize<SnakeToCamelTransformer<R>>}` : T : T;
 
-type CamelizeShallow<T> = { [K in keyof T as SnakeToCamelTransformer<K>]: T[K] };
+type CamelCaseShallow<T> = { [K in keyof T as SnakeToCamelTransformer<K>]: T[K] };
 
-type CamelizeDeep<T> = T extends readonly any[] ? { [K in keyof T]: CamelizeDeep<T[K]> } : T extends object ? { [K in keyof T as SnakeToCamelTransformer<Extract<K, string>>]: CamelizeDeep<T[K]> } : T;
+type CamelCaseDeep<T> = T extends readonly any[] ? { [K in keyof T]: CamelCaseDeep<T[K]> } : T extends object ? { [K in keyof T as SnakeToCamelTransformer<Extract<K, string>>]: CamelCaseDeep<T[K]> } : T;
 
-export type Camelize<T, Deep = ''> = Deep extends boolean ? CamelizeDeep<T> : CamelizeShallow<T>;
+export type CamelCase<T, Deep = ''> = Deep extends boolean ? CamelCaseDeep<T> : CamelCaseShallow<T>;
 
 export default transformObjectKeys;
 

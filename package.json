@@ -1,6 +1,6 @@
 {
   "name": "transform-object-keys",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Transform object keys into a new one using preset or custom rules",
   "license": "MIT",
   "repository": "bloodf/transform-object-keys",
